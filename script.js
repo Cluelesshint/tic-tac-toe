@@ -1,12 +1,12 @@
 const game = (() => {
-    const checkWin = () => {
+    function checkWin() {
         const board = Gameboard.gameboard;
     }
     return { checkWin };
 })();
 
 const Gameboard = (() => {
-    const gameboard = [
+    let gameboard = [
         [1, 2, 3],
         [4, 5, 6],
         [7, 8, 9]
@@ -17,11 +17,18 @@ const Gameboard = (() => {
 })();
 
 const displayController = (() => {
-    const container = document.querySelector('.main-container');
+    const buttons = document.querySelectorAll('#grid');
+    
+    buttons.forEach((button) => {
+        button.addEventListener('click', displayBoard);
+    })
 
-    const displayBoard = () => {
 
+    function displayBoard(e){
+        console.log(e.target.id);
     }
+
+    return { displayBoard };
 })();
 
 const playerFactory = (name) => {

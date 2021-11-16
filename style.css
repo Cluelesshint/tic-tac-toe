@@ -33,8 +33,15 @@ body {
 }
 
 .board {
-    height: 400px;
-    width: 400px;
-    background-color: black;
+    height: 368px;
+    width: 368px;
+    background-color: aqua;
+}
+
+#grid {
+    height: 120px;
+    width: 120px;
+    border: 0;
+    padding: 0;
 }
 
