@@ -1,6 +1,40 @@
 body {
-    background-color: blue;
+    background-color: black;
     height: 100vh;
     width: auto;
     margin: 0;
 }
+
+.title {
+    background-color: black;
+    font-size: 36px;
+    height: 100px;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.turn-ind {
+    background-color: black;
+    height: 50px;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container {
+    background-color: black;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.board {
+    height: 400px;
+    width: 400px;
+    background-color: black;
+}
+
