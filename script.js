@@ -19,13 +19,13 @@ const Gameboard = (() => {
 const displayController = (() => {
     const buttons = document.querySelectorAll('#grid');
     
-    buttons.forEach((button) => {
+    buttons.forEach((button) => { 
         button.addEventListener('click', displayBoard);
     })
 
-
     function displayBoard(e){
-        console.log(e.target.id);
+        const dataKey = e.target.attributes[1].nodeValue;
+        console.log(dataKey);
     }
 
     return { displayBoard };
