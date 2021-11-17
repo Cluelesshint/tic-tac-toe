@@ -11,7 +11,7 @@ const Gameboard = (() => {
         [4, 5, 6],
         [7, 8, 9]
     ];
-
+    
 
     return { gameboard };
 })();
@@ -25,15 +25,15 @@ const displayController = (() => {
 
     function displayBoard(e){
         const dataKey = e.target.attributes[1].nodeValue;
-        console.log(dataKey);
     }
 
     return { displayBoard };
 })();
 
-const playerFactory = (name) => {
-    return { name };
+const playerFactory = (name, turn) => {
+    let turn = turn;
+    return { name, turn };
 }
 
-const player1 = playerFactory('Player One');
-const player2 = playerFactory('Player Two');
+const player1 = playerFactory('Player One', true);
+const player2 = playerFactory('Player Two', false);
