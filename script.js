@@ -1,6 +1,6 @@
 const game = (() => {
     function checkWin() {
-        const board = Gameboard.gameboard;
+
     }
     function checkTurn(){
         if (player1.turn) return 'x';
@@ -11,9 +11,9 @@ const game = (() => {
 
 const Gameboard = (() => {
     let gameboard = [
-        [1, 2, 3],
-        [4, 5, 6],
-        [7, 8, 9]
+        '','','',
+        '','','',
+        '','','',
     ];
     return { gameboard };
 })();
@@ -24,18 +24,23 @@ const displayController = (() => {
 
     buttons.forEach((button) => { 
         button.addEventListener('click', (e) => {
-            displayBoard(button);
+            let key = e.target.dataset.key;
+            displayBoard(button, key);
         });
     });
-
-    function displayBoard(button){
-        if (checkEmpty(button)){
+    function displayBoard(button, key){
+        if (game.checkWin()){
+            console.log('You Win!')
+        }
+        else if (checkEmpty(button)){
             if (game.checkTurn() === 'x'){
                 button.innerHTML = '<img src="img/x.png" />';
                 button.classList.add('x');
                 player1.turn = false;
                 player2.turn = true;
                 turnIndicator.innerHTML = 'Player O\'s turn!';
+                Gameboard.gameboard[key] = 'x';
+                console.table(Gameboard.gameboard);
             }
             else {
                 button.innerHTML = '<img src="img/o.png" />';
@@ -43,17 +48,17 @@ const displayController = (() => {
                 player1.turn = true;
                 player2.turn = false;
                 turnIndicator.innerHTML = 'Player X\'s turn!';
+                Gameboard.gameboard[key] = 'o';
+                console.table(Gameboard.gameboard);
             }
         }
         else return;
     }
-    
     function checkEmpty(button){
         if (button.classList.contains('x') || button.classList.contains('o')){
             return false;
         }else return true;
     }
-    return { };
 })();
 
 const playerFactory = (name, value, type) => {
