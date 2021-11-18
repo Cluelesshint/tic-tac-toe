@@ -1,4 +1,5 @@
 const game = (() => {
+    let state = false;
     let currentName = 1;
 
     const nameInput = document.querySelector('#input');
@@ -10,9 +11,39 @@ const game = (() => {
     button.addEventListener('click', update);
 
     function reset(){
-        
+        button.innerHTML = 'Start';
+        resetBoard();
+        resetGrid();
+        resetPlayers();
+        updateState(false);
     }
-    
+    function resetBoard(){
+        for (let i = 0; i < 8; i++){
+            Board.board[i] = '';
+        }
+    }
+    function resetGrid(){
+        displayController.buttons.forEach((grid => {
+            grid.classList.remove('x');
+            grid.classList.remove('o');
+            grid.innerHTML = '';
+        }))
+    }
+    function resetPlayers(){
+        player1.changeTurn(true);
+        player2.changeTurn(false);
+        player1.changeName('Player 1');
+        player2.changeName('Player 2');
+    }
+    function updateState(bool){
+        state = bool;
+    }
+    function logState(){
+        console.log(state);
+    }
+    function returnState(){
+        return state;
+    }
     function update(){
         if (button.innerHTML === 'Start'){
             remove.style.opacity = 100;
@@ -20,7 +51,7 @@ const game = (() => {
         }
         else if (button.innerHTML === 'Reset'){
             remove.style.opacity = 0;
-            button.innerHTML = 'Start';
+            reset();
         }
     }
     function takeInput(e){
@@ -38,15 +69,16 @@ const game = (() => {
             nameInput.value = '';
             currentName--;
             remove.style.opacity = 0;
-            button.style.opacity = 0;
             displayController.turnIndicator.innerHTML = `${player1.Name}'s Turn!`
+            label.innerHTML = 'Player 1:'
+            game.updateState(true);
         }
     }
     function checkTurn(){
         if (player1.turn) return 'x';
         else return 'o';
     }
-    return { checkTurn };
+    return { checkTurn, reset, updateState, logState, returnState };
 })();
 
 const Board = (() => {
@@ -91,6 +123,9 @@ const Board = (() => {
 const displayController = (() => {
     const turnIndicator = document.querySelector('#ind');
     const buttons = document.querySelectorAll('#grid');
+    const popup = document.querySelector('.alert');
+    const popupBtn = document.querySelector('.close')
+    const winName = document.querySelector('.winner');
 
     buttons.forEach((button) => { 
         button.addEventListener('click', (e) => {
@@ -98,22 +133,34 @@ const displayController = (() => {
             displayBoard(button, key);
         });
     });
+
+    popupBtn.addEventListener('click', () => {
+        popup.classList.remove('popup');
+        popupBtn.style.opacity = 0;
+    });
+
+    function showWinner(player){
+        popup.classList.add('popup');
+        popupBtn.style.opacity = 100;
+        winName.innerHTML = `${player.Name} wins!`;
+        turnIndicator.innerHTML = '';
+    }
     function winner(n1){
         if (n1 === player1.typeOf){
-            turnIndicator.innerHTML = `${player1.Name} wins!`;
+            showWinner(player1);
         }
-        else turnIndicator.innerHTML = `${player2.Name} wins!`;
+        else{
+            showWinner(player2);
+        }
     }
     function showCat(){
         turnIndicator.innerHTML = `It's a Tie`;
     }
     function displayBoard(button, key){
-        console.log(player1);
-        console.log(player2);
         if (Board.checkWin()){
-            //reset
+            game.reset();
         }
-        else if (checkEmpty(button)){
+        else if (checkEmpty(button) && game.returnState()){
             if (game.checkTurn() === 'x'){
                 button.innerHTML = '<img src="img/x.png" />';
                 button.classList.add('x');
@@ -132,10 +179,10 @@ const displayController = (() => {
             }
         }
         if (Board.checkWin()){
-            //reset
+            game.reset();
         }
         else if (Board.checkCat(Board.board)){
-            //reset
+            game.reset();
         }
         else return;
     }
@@ -144,23 +191,22 @@ const displayController = (() => {
             return false;
         }else return true;
     }
-    return { turnIndicator, winner, showCat };
+    return { turnIndicator, winner, showCat, buttons };
 })();
 
 const playerFactory = (name, value, type) => {
     let Name = name;
     let turn = value;
-    let win = false;
     let typeOf = type;
 
     function changeName(input) {
         this.Name = input;
     }
-    function isWin() {
-        return win;
+    function changeTurn(input){
+        this.turn = input;
     }
 
-    return { Name, turn, typeOf, isWin, changeName };
+    return { Name, turn, typeOf, changeName, changeTurn };
 }
 
 let player1 = playerFactory('Player 1', true, 'x');

@@ -5,6 +5,42 @@ body {
     margin: 0;
 }
 
+.popup .overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+.popup .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    width: 300px;
+    height: 100px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.close {
+    opacity: 0;
+    height: 30px;
+    width: 80px;
+}
+
+.hide {
+    opacity: 0;
+}
+
 .title {
     background-color: black;
     color: white;
