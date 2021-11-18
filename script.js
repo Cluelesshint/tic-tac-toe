@@ -1,5 +1,31 @@
 const game = (() => {
+    function isEqual(n1, n2, n3){
+        if (n1 !== '' && n2 !== '' && n3 !== ''){
+            if (n1 === n2 && n1 === n3 && n2 === n3){
+                displayController.winner(n1);
+                return true;
+            } 
+            else return false;
+        } 
+    }
+    function checkCat(board){
+        let count = 0;
+        for (let i = 0; i < board.length; i++){
+            if (board[i] === '') return false;
+            else count++;
+        }
+        if (count === 8) return true;
+    }
     function checkWin() {
+        return isEqual(Board.board[0], Board.board[1], Board.board[2]) ||
+               isEqual(Board.board[3], Board.board[4], Board.board[5]) ||
+               isEqual(Board.board[6], Board.board[7], Board.board[8]) ||
+               isEqual(Board.board[0], Board.board[3], Board.board[6]) ||
+               isEqual(Board.board[1], Board.board[4], Board.board[7]) ||
+               isEqual(Board.board[2], Board.board[5], Board.board[8]) ||
+               isEqual(Board.board[2], Board.board[4], Board.board[6]) ||
+               isEqual(Board.board[0], Board.board[4], Board.board[8]) ||
+               checkCat(Board.board);
 
     }
     function checkTurn(){
@@ -9,13 +35,13 @@ const game = (() => {
     return { checkWin, checkTurn };
 })();
 
-const Gameboard = (() => {
-    let gameboard = [
+const Board = (() => {
+    let board = [
         '','','',
         '','','',
         '','','',
     ];
-    return { gameboard };
+    return { board };
 })();
 
 const displayController = (() => {
@@ -28,9 +54,15 @@ const displayController = (() => {
             displayBoard(button, key);
         });
     });
+    function winner(n1){
+        if (n1 === player1.typeOf){
+            turnIndicator.innerHTML = `${player1.name} wins!`;
+        }
+        else turnIndicator.innerHTML = `${player2.name} wins!`;
+    }
     function displayBoard(button, key){
         if (game.checkWin()){
-            console.log('You Win!')
+            //reset
         }
         else if (checkEmpty(button)){
             if (game.checkTurn() === 'x'){
@@ -39,8 +71,7 @@ const displayController = (() => {
                 player1.turn = false;
                 player2.turn = true;
                 turnIndicator.innerHTML = 'Player O\'s turn!';
-                Gameboard.gameboard[key] = 'x';
-                console.table(Gameboard.gameboard);
+                Board.board[key] = 'x';
             }
             else {
                 button.innerHTML = '<img src="img/o.png" />';
@@ -48,9 +79,11 @@ const displayController = (() => {
                 player1.turn = true;
                 player2.turn = false;
                 turnIndicator.innerHTML = 'Player X\'s turn!';
-                Gameboard.gameboard[key] = 'o';
-                console.table(Gameboard.gameboard);
+                Board.board[key] = 'o';
             }
+        }
+        if (game.checkWin()){
+            //reset
         }
         else return;
     }
@@ -59,13 +92,17 @@ const displayController = (() => {
             return false;
         }else return true;
     }
+    return { winner };
 })();
 
 const playerFactory = (name, value, type) => {
     let turn = value;
+    let win = false;
     let typeOf = type;
 
-    return { name, turn, typeOf };
+    const isWin = (value) => win = value;
+
+    return { name, turn, typeOf, isWin };
 }
 
 const player1 = playerFactory('Player One', true, 'x');
