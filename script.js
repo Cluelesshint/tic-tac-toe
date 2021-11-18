@@ -3,23 +3,43 @@ const game = (() => {
 
     const nameInput = document.querySelector('#input');
     const label = document.querySelector('label');
+    const remove = document.querySelector('.input');
+    const button = document.querySelector('.choice');
 
     nameInput.addEventListener('keypress', takeInput);
+    button.addEventListener('click', update);
 
+    function reset(){
+        
+    }
+    
+    function update(){
+        if (button.innerHTML === 'Start'){
+            remove.style.opacity = 100;
+            button.innerHTML = 'Reset';
+        }
+        else if (button.innerHTML === 'Reset'){
+            remove.style.opacity = 0;
+            button.innerHTML = 'Start';
+        }
+    }
     function takeInput(e){
         if (e.key === 'Enter') updateInput(nameInput.value);
     }
     function updateInput(userInput){
         if (currentName === 1){
             player1.changeName(userInput);
-            nameInput.value === '';
+            nameInput.value = '';
             label.innerHTML = 'Player 2:'
             currentName++;
         }
         else if (currentName === 2){
             player2.changeName(userInput);
-            nameInput.value === '';
+            nameInput.value = '';
             currentName--;
+            remove.style.opacity = 0;
+            button.style.opacity = 0;
+            displayController.turnIndicator.innerHTML = `${player1.Name}'s Turn!`
         }
     }
     function checkTurn(){
@@ -99,7 +119,7 @@ const displayController = (() => {
                 button.classList.add('x');
                 player1.turn = false;
                 player2.turn = true;
-                turnIndicator.innerHTML = 'Player O\'s turn!';
+                turnIndicator.innerHTML = `${player2.Name}'s Turn!`;
                 Board.board[key] = 'x';
             }
             else {
@@ -107,7 +127,7 @@ const displayController = (() => {
                 button.classList.add('o');
                 player1.turn = true;
                 player2.turn = false;
-                turnIndicator.innerHTML = 'Player X\'s turn!';
+                turnIndicator.innerHTML = `${player1.Name}'s Turn!`;
                 Board.board[key] = 'o';
             }
         }
@@ -124,7 +144,7 @@ const displayController = (() => {
             return false;
         }else return true;
     }
-    return { winner, showCat };
+    return { turnIndicator, winner, showCat };
 })();
 
 const playerFactory = (name, value, type) => {
