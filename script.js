@@ -15,6 +15,7 @@ const game = (() => {
         resetBoard();
         resetGrid();
         resetPlayers();
+        displayController.clearTurn();
         updateState(false);
     }
     function resetBoard(){
@@ -55,13 +56,18 @@ const game = (() => {
         }
     }
     function takeInput(e){
-        if (e.key === 'Enter') updateInput(nameInput.value);
+        if (e.key === 'Enter'){
+            if (nameInput.value !== ''){
+                updateInput(nameInput.value);
+            }
+            else alert('Invalid Name');
+        }
     }
     function updateInput(userInput){
         if (currentName === 1){
             player1.changeName(userInput);
             nameInput.value = '';
-            label.innerHTML = 'Player 2:'
+            label.innerHTML = 'Player 2'
             currentName++;
         }
         else if (currentName === 2){
@@ -70,7 +76,7 @@ const game = (() => {
             currentName--;
             remove.style.opacity = 0;
             displayController.turnIndicator.innerHTML = `${player1.Name}'s Turn!`
-            label.innerHTML = 'Player 1:'
+            label.innerHTML = 'Player 1'
             game.updateState(true);
         }
     }
@@ -156,6 +162,9 @@ const displayController = (() => {
     function showCat(){
         turnIndicator.innerHTML = `It's a Tie`;
     }
+    function clearTurn(){
+        turnIndicator.innerHTML = '';
+    }
     function displayBoard(button, key){
         if (Board.checkWin()){
             game.reset();
@@ -191,7 +200,7 @@ const displayController = (() => {
             return false;
         }else return true;
     }
-    return { turnIndicator, winner, showCat, buttons };
+    return { turnIndicator, buttons, winner, showCat, clearTurn };
 })();
 
 const playerFactory = (name, value, type) => {
