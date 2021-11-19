@@ -75,7 +75,7 @@ const game = (() => {
             nameInput.value = '';
             currentName--;
             remove.style.opacity = 0;
-            displayController.turnIndicator.innerHTML = `${player1.Name}'s Turn!`
+            displayController.turnIndicator.innerHTML = `${player1.Name}'s Turn! (${player1.typeOf})`
             label.innerHTML = 'Player 1'
             game.updateState(true);
         }
@@ -160,7 +160,10 @@ const displayController = (() => {
         }
     }
     function showCat(){
-        turnIndicator.innerHTML = `It's a Tie`;
+        popup.classList.add('popup');
+        popupBtn.style.opacity = 100;
+        winName.innerHTML = `It's a tie!`;
+        turnIndicator.innerHTML = '';
     }
     function clearTurn(){
         turnIndicator.innerHTML = '';
@@ -175,7 +178,7 @@ const displayController = (() => {
                 button.classList.add('x');
                 player1.turn = false;
                 player2.turn = true;
-                turnIndicator.innerHTML = `${player2.Name}'s Turn!`;
+                turnIndicator.innerHTML = `${player2.Name}'s Turn! (${player2.typeOf})`;
                 Board.board[key] = 'x';
             }
             else {
@@ -183,7 +186,7 @@ const displayController = (() => {
                 button.classList.add('o');
                 player1.turn = true;
                 player2.turn = false;
-                turnIndicator.innerHTML = `${player1.Name}'s Turn!`;
+                turnIndicator.innerHTML = `${player1.Name}'s Turn! (${player1.typeOf})`;
                 Board.board[key] = 'o';
             }
         }
