@@ -1,150 +1,150 @@
 body {
-    background-color: black;
-    height: 100vh;
-    width: auto;
-    margin: 0;
+  background-color: black;
+  height: 100vh;
+  width: auto;
+  margin: 0;
 }
 
 .title {
-    background-color: black;
-    color: #FF9A00;
-    font-family: 'Nosifer', cursive;
-    font-size: 36px;
-    height: 100px;
-    width: auto;
-    padding-top: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: black;
+  color: #ff9a00;
+  font-family: "Nosifer", cursive;
+  font-size: 36px;
+  height: 100px;
+  width: auto;
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .turn-ind {
-    background-color: black;
-    color: #F75F1C;
-    font-size: 26px;
-    font-family: 'Amatic SC', cursive;
-    height: 90px;
-    width: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  background-color: black;
+  color: #f75f1c;
+  font-size: 26px;
+  font-family: "Amatic SC", cursive;
+  height: 90px;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .main-container {
-    background-color: black;
-    height: 368px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+  background-color: black;
+  height: 368px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .board {
-    height: 368px;
-    width: 368px;
-    background-color: #F75F1C;
+  height: 368px;
+  width: 368px;
+  background-color: #f75f1c;
 }
 
 #grid {
-    height: 120px;
-    width: 120px;
-    border: 0;
-    padding: 0;
-    opacity: 90%;
+  height: 120px;
+  width: 120px;
+  border: 0;
+  padding: 0;
+  opacity: 90%;
 }
 
 .input {
-    opacity: 0;
-    height: 100px;
-    width: auto;
-    gap: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  opacity: 0;
+  height: 100px;
+  width: auto;
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .name {
-    height: 20px;
-    width: 150px;
-    color: black;
-    background-color: white;
+  height: 20px;
+  width: 150px;
+  color: black;
+  background-color: white;
 }
 
 .input.gone {
-    opacity: 0;
+  opacity: 0;
 }
 
 label {
-    color: #F75F1C;
-    font-size: 20px;
-    font-family: 'Nosifer';
+  color: #f75f1c;
+  font-size: 20px;
+  font-family: "Nosifer";
 }
 
 #input {
-    height: 30px;
-    width: 150px;
-    font-size: 20px;
-    font-weight: 700;
-    font-family: 'Amatic SC', cursive;
-    background-color: #FF9A00;
+  height: 30px;
+  width: 150px;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: "Amatic SC", cursive;
+  background-color: #ff9a00;
 }
 
 .start-reset {
-    height: 40px;
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  height: 40px;
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .choice {
-    font-size: 23px;
-    font-family: 'Amatic SC', cursive;
-    color: #F75F1C;
-    background-color: #000000;
-    height: 35px;
-    width: 75px;
-    border: 2;
-    padding: 2;
-    text-align: center;
+  font-size: 23px;
+  font-family: "Amatic SC", cursive;
+  color: #f75f1c;
+  background-color: #000000;
+  height: 35px;
+  width: 75px;
+  border: 2;
+  padding: 2;
+  text-align: center;
 }
 
 .popup .overlay {
-    position: fixed;
-    top: 0px;
-    left: 0px;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 1;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1;
 }
 
 .popup .content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #FF9A00;
-    font-family: 'Amatic SC';
-    width: 300px;
-    height: 100px;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ff9a00;
+  font-family: "Amatic SC";
+  width: 300px;
+  height: 100px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .winner {
-    font-size: 26px;
+  font-size: 26px;
 }
 
 .close {
-    opacity: 0;
-    height: 30px;
-    width: 80px;
-    font-size: 20px;
-    color: #F75F1C;
-    font-family: 'Amatic SC';
-    background-color: #000000;
+  opacity: 0;
+  height: 30px;
+  width: 80px;
+  font-size: 20px;
+  color: #f75f1c;
+  font-family: "Amatic SC";
+  background-color: #000000;
 }
