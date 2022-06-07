@@ -51,8 +51,8 @@ body {
 }
 
 .game-grid {
-  height: 500px;
-  width: 500px;
+  height: 400px;
+  width: 400px;
   background-color: var(--neutral-clr-700);
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
     rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
@@ -67,6 +67,14 @@ body {
 .game-grid > div {
   cursor: pointer;
   background-color: var(--neutral-clr-300);
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.game-grid > div:hover {
+  background-color: var(--neutral-clr-100);
 }
 
 .choice {

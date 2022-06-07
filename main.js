@@ -28,20 +28,22 @@ const Game = (() => {
 const Board = (() => {
   let board = ["", "", "", "", "", "", "", "", ""];
 
-  function updateBoard(cellNumber) {
+  function updateBoardAndTurn(cellNumber, e) {
     if (player1.getTurn() && board[cellNumber] == "") {
       board[cellNumber] = "x";
+      e.path[0].innerHTML = '<img src="assets/img/x.svg" />';
       player1.setTurn(false);
       player2.setTurn(true);
       DisplayController.updateWhoseTurnItIs(player2);
     } else if (player2.getTurn() && board[cellNumber] == "") {
       board[cellNumber] = "o";
+      e.path[0].innerHTML = '<img src="assets/img/o.svg" />';
       player1.setTurn(true);
       player2.setTurn(false);
       DisplayController.updateWhoseTurnItIs(player1);
     }
   }
-  return { updateBoard, board };
+  return { updateBoardAndTurn, board };
 })();
 
 const DisplayController = (() => {
@@ -89,7 +91,7 @@ const DisplayController = (() => {
     cell.addEventListener("click", (e) => {
       if (Game.getGameState() != "no opponent") {
         const cellNumber = e.target.dataset.cell;
-        Board.updateBoard(cellNumber);
+        Board.updateBoardAndTurn(cellNumber, e);
       }
     });
   });
