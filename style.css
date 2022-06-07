@@ -124,7 +124,8 @@ body {
 
 .turn-indicator > h3 {
   font-family: sans-serif, "Times New Roman";
-  font-size: 1.7rem;
+  font-size: 1.2rem;
   letter-spacing: 1px;
   pointer-events: none;
+  text-transform: uppercase;
 }
