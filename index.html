@@ -5,49 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic-Tac-Toe</title>
-    <script src="script.js" defer></script>
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Nosifer&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
   </head>
   <body>
-    <div class="main">
-      <div class="title"><h1>Tic-Tac-Toe</h1></div>
-      <div class="turn-ind"><h3 id="ind"></h3></div>
-      <div class="main-container">
-        <div class="board">
-          <button id="grid" data-key="0"></button>
-          <button id="grid" data-key="1"></button>
-          <button id="grid" data-key="2"></button>
-          <button id="grid" data-key="3"></button>
-          <button id="grid" data-key="4"></button>
-          <button id="grid" data-key="5"></button>
-          <button id="grid" data-key="6"></button>
-          <button id="grid" data-key="7"></button>
-          <button id="grid" data-key="8"></button>
-        </div>
+    <div class="main-content">
+      <div class="header">
+        <h1 class="title">Tic Tac Toe</h1>
       </div>
-      <div class="start-reset">
-        <button class="choice">Start</button>
-      </div>
-      <div class="input">
-        <label for="input">Player 1</label>
-        <input id="input" type="text" placeholder="Enter Name" />
-      </div>
-    </div>
-    <div class="alert">
-      <div class="overlay"></div>
       <div class="content">
-        <div class="winner"></div>
-        <button class="close">Close</button>
+        <div class="game-grid">
+          <div data-cell="0" class="cell"></div>
+          <div data-cell="1" class="cell"></div>
+          <div data-cell="2" class="cell"></div>
+          <div data-cell="3" class="cell"></div>
+          <div data-cell="4" class="cell"></div>
+          <div data-cell="5" class="cell"></div>
+          <div data-cell="6" class="cell"></div>
+          <div data-cell="7" class="cell"></div>
+          <div data-cell="8" class="cell"></div>
+        </div>
+        <div class="choice">
+          <h3>Choose Your Opponent</h3>
+          <div class="choice-wrapper">
+            <button class="human">Human</button>
+            <button class="computer">Computer</button>
+          </div>
+        </div>
       </div>
     </div>
   </body>
