@@ -2,6 +2,17 @@ const Game = (() => {
   let gameState = "no opponent";
   let whoseTurn = null;
 
+  function reset() {
+    gameState = "no opponent";
+    whoseTurn = null;
+    player1.setTurn(true);
+    player2.setTurn(false);
+    Board.clearBoard();
+    DisplayController.resetModuleAndCont();
+    DisplayController.buildChoicesDiv();
+    DisplayController.clearGridSquares();
+  }
+
   function updateGameState(opponent) {
     gameState = opponent;
   }
@@ -22,11 +33,21 @@ const Game = (() => {
     return gameState;
   }
 
-  return { getGameState, getWhoseTurn, updateGameState, updateWhoseTurn };
+  return {
+    getGameState,
+    getWhoseTurn,
+    updateGameState,
+    updateWhoseTurn,
+    reset,
+  };
 })();
 
 const Board = (() => {
   let board = ["", "", "", "", "", "", "", "", ""];
+
+  function clearBoard() {
+    board = ["", "", "", "", "", "", "", "", ""];
+  }
 
   function checkCat() {
     if (board.indexOf("") !== -1) {
@@ -34,6 +55,7 @@ const Board = (() => {
       return false;
     }
     Game.updateGameState("no opponent");
+    DisplayController.displayResult("cat");
     // return true if no blank 'cells' exists
     return true;
   }
@@ -54,7 +76,11 @@ const Board = (() => {
   function checkWin() {
     if (checkBoard()) {
       Game.updateGameState("no opponent");
-      alert("Thats a win!");
+      if (Game.getWhoseTurn() == player1) {
+        DisplayController.displayResult("win", player1);
+      } else {
+        DisplayController.displayResult("win", player2);
+      }
     }
   }
 
@@ -84,19 +110,73 @@ const Board = (() => {
       DisplayController.updateWhoseTurnItIs(player1);
     }
   }
-  return { checkWin, checkCat, updateBoardAndPlayerTurn, board };
+  return { checkWin, checkCat, clearBoard, updateBoardAndPlayerTurn, board };
 })();
 
 const DisplayController = (() => {
+  const mainCont = document.querySelector(".main-content");
   const content = document.querySelector(".content");
   const choices = document.querySelectorAll("button");
   const gameCells = document.querySelectorAll(".cell");
+  const resultModule = document.querySelector(".display-result");
+  const resultText = document.querySelector(".result");
+  const reset = document.querySelector(".reset");
 
   function removeChoicesDiv() {
     content.removeChild(content.childNodes[3]);
   }
 
-  function displayWhoseTurnItIs() {
+  function removeTurnIndicatorDiv() {
+    content.removeChild(content.childNodes[3]);
+  }
+
+  function resetModuleAndCont() {
+    resultModule.classList.remove("active");
+    mainCont.classList.remove("blur");
+  }
+
+  function displayResult(winOrCat, player) {
+    resultModule.classList.add("active");
+    mainCont.classList.add("blur");
+    if (winOrCat == "win") {
+      resultText.innerHTML = `${player.getName()} wins!`;
+    }
+    // ignore prettier
+    else if (winOrCat == "cat") {
+      resultText.innerHTML = `Cat!`;
+    }
+  }
+
+  function clearGridSquares() {
+    gameCells.forEach((cell) => {
+      if (cell.childNodes[0]) {
+        cell.removeChild(cell.childNodes[0]);
+      }
+    });
+  }
+
+  function buildChoicesDiv() {
+    removeTurnIndicatorDiv();
+    const choice = document.createElement("div");
+    choice.classList.add("choice");
+    const choose = document.createElement("h3");
+    choose.innerHTML = "Choose Your Opponent";
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("choice-wrapper");
+    const human = document.createElement("button");
+    human.classList.add("human");
+    human.innerHTML = "Human";
+    const computer = document.createElement("button");
+    computer.innerHTML = "Computer";
+    computer.classList.add("computer");
+    wrapper.appendChild(human);
+    wrapper.appendChild(computer);
+    choice.appendChild(choose);
+    choice.appendChild(wrapper);
+    content.appendChild(choice);
+  }
+
+  function buildTurnIndicatorDiv() {
     let player = Game.getWhoseTurn();
     const turnIndicator = document.createElement("div");
     turnIndicator.classList.add("turn-indicator");
@@ -115,7 +195,7 @@ const DisplayController = (() => {
   function displayPlayerDiv(oppenent) {
     if (oppenent == "human") {
       Game.updateWhoseTurn(player1);
-      displayWhoseTurnItIs();
+      buildTurnIndicatorDiv();
     }
   }
 
@@ -131,11 +211,10 @@ const DisplayController = (() => {
   gameCells.forEach((cell) => {
     cell.addEventListener("click", (e) => {
       if (Game.getGameState() == "no opponent") {
-        console.log("no oppoenent");
+        //do nothing
       }
       // prettier block
       else if (Game.getGameState() == "human") {
-        console.log("human");
         const cellNumber = e.target.dataset.cell;
         Board.updateBoardAndPlayerTurn(cellNumber, e);
         Board.checkCat();
@@ -144,7 +223,17 @@ const DisplayController = (() => {
     });
   });
 
-  return { updateWhoseTurnItIs };
+  reset.addEventListener("click", (e) => {
+    Game.reset();
+  });
+
+  return {
+    updateWhoseTurnItIs,
+    displayResult,
+    resetModuleAndCont,
+    buildChoicesDiv,
+    clearGridSquares,
+  };
 })();
 
 const playerFactory = (name, value, type) => {
@@ -172,7 +261,11 @@ const playerFactory = (name, value, type) => {
     return playerType;
   }
 
-  return { toggleTurn, getName, getTurn, getType };
+  function setTurn(turnBool) {
+    playerTurn = turnBool;
+  }
+
+  return { toggleTurn, getName, getTurn, getType, setTurn };
 };
 
 let player1 = playerFactory("Player 1", true, "X's");

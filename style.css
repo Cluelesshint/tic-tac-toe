@@ -23,6 +23,10 @@ body {
   grid-template-rows: 100px 1fr;
 }
 
+.main-content.blur {
+  opacity: 0.4;
+}
+
 .header {
   background-color: var(--neutral-clr-700);
   grid-row: 1 / 2;
@@ -128,4 +132,23 @@ body {
   letter-spacing: 1px;
   pointer-events: none;
   text-transform: uppercase;
+}
+
+.display-result {
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: 0.2s ease-in-out;
+}
+
+.display-result.active {
+  opacity: 1;
+  pointer-events: all;
+  background-color: black;
+  width: 200px;
+  height: 125px;
+  color: white;
 }
