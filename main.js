@@ -116,7 +116,7 @@ const Board = (() => {
 const DisplayController = (() => {
   const mainCont = document.querySelector(".main-content");
   const content = document.querySelector(".content");
-  const choices = document.querySelectorAll("button");
+  let choices = document.querySelectorAll("button");
   const gameCells = document.querySelectorAll(".cell");
   const resultModule = document.querySelector(".display-result");
   const resultText = document.querySelector(".result");
