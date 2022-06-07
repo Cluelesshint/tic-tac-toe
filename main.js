@@ -33,13 +33,12 @@ const Board = (() => {
       board[cellNumber] = "x";
       player1.setTurn(false);
       player2.setTurn(true);
-      console.log(player1.getTurn());
-      console.log(board);
-    } else if (player2.getTurn && board[cellNumber] == "") {
+      DisplayController.updateWhoseTurnItIs(player2);
+    } else if (player2.getTurn() && board[cellNumber] == "") {
       board[cellNumber] = "o";
       player1.setTurn(true);
       player2.setTurn(false);
-      console.log(board);
+      DisplayController.updateWhoseTurnItIs(player1);
     }
   }
   return { updateBoard, board };
@@ -55,19 +54,24 @@ const DisplayController = (() => {
   }
 
   function displayWhoseTurnItIs() {
-    let whoseTurn = Game.getWhoseTurn();
+    let player = Game.getWhoseTurn();
     const turnIndicator = document.createElement("div");
     turnIndicator.classList.add("turn-indicator");
     const playerTurnText = document.createElement("h3");
-    playerTurnText.innerHTML = `${whoseTurn.getName()}'s Turn!`;
+    playerTurnText.classList.add("turn-text");
+    playerTurnText.innerHTML = `${player.getName()}'s Turn!`;
     turnIndicator.appendChild(playerTurnText);
     content.appendChild(turnIndicator);
+  }
+
+  function updateWhoseTurnItIs(player) {
+    const turnText = document.querySelector(".turn-text");
+    turnText.innerHTML = `${player.getName()}'s Turn!`;
   }
 
   function displayPlayerDiv(oppenent) {
     if (oppenent == "human") {
       Game.updateWhoseTurn(player1);
-      Game.getWhoseTurn();
       displayWhoseTurnItIs();
     }
   }
@@ -89,6 +93,8 @@ const DisplayController = (() => {
       }
     });
   });
+
+  return { updateWhoseTurnItIs };
 })();
 
 const playerFactory = (name, value, type) => {
