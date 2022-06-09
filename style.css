@@ -18,7 +18,7 @@ body {
 }
 
 .blur {
-  opacity: 0.5;
+  opacity: 0.8;
   pointer-events: none;
 }
 
@@ -102,7 +102,7 @@ body {
 .choice > h3 {
   font-family: sans-serif, "Times New Roman";
   font-size: 1.2rem;
-  color: white;
+  color: var(--neutral-clr-100);
   text-align: center;
   letter-spacing: 1px;
 }
@@ -131,6 +131,7 @@ body {
 
 .turn-indicator {
   width: 250px;
+  height: 61px;
   color: var(--neutral-clr-100);
   margin-top: 25px;
   display: flex;
@@ -155,7 +156,6 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  transition: 0.2s ease-in-out;
   cursor: default;
 
   background-color: var(--neutral-clr-800);

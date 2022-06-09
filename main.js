@@ -54,13 +54,20 @@ const Board = (() => {
     board = ["", "", "", "", "", "", "", "", ""];
   }
 
+  function getValidMoves() {
+    validMoves = [];
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] == "") validMoves.push(i);
+    }
+    return validMoves;
+  }
+
   function checkCat() {
     if (board.indexOf("") !== -1) {
       // return false if a blank 'cell' exists
       return false;
     }
     Game.updateGameState("no opponent");
-    DisplayController.blurContent();
     DisplayController.displayGameResult("cat");
     // return true if no blank 'cells' exists
     return true;
@@ -116,7 +123,14 @@ const Board = (() => {
       DisplayController.updateTurnIndicator(player1);
     }
   }
-  return { checkWin, checkCat, resetBoard, updateBoardAndPlayerTurn, board };
+  return {
+    checkWin,
+    checkCat,
+    resetBoard,
+    updateBoardAndPlayerTurn,
+    getValidMoves,
+    board,
+  };
 })();
 
 const DisplayController = (() => {
@@ -170,7 +184,7 @@ const DisplayController = (() => {
   }
 
   function updateTurnIndicator(player) {
-    turnText.innerHTML = `${player.getName()}'s Turn ${player.getType()}`;
+    turnText.innerHTML = `${player.getName()}'s Turn`;
   }
 
   function displayPlayerDiv(oppenent) {
@@ -214,6 +228,12 @@ const DisplayController = (() => {
     toggleBlurContent,
     toggleResultsDiv,
   };
+})();
+
+const AI = (() => {
+  function getRandomMove() {
+    validMoves = Game.getValidMoves();
+  }
 })();
 
 const playerFactory = (name, value, type) => {
