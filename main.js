@@ -78,6 +78,11 @@ const Board = (() => {
     return validMoves;
   }
 
+  function checkValidMove(index) {
+    if (board[index] == "") return true;
+    return false;
+  }
+
   function checkCat() {
     if (board.indexOf("") !== -1) {
       // return false if a blank 'cell' exists
@@ -152,9 +157,11 @@ const Board = (() => {
   }
 
   function updateBoardAndPlayerTurnComp(cellNumber, e) {
-    board[cellNumber] = "x";
-    e.path[0].innerHTML = '<img src="assets/img/x.svg" />';
-    Game.updateLastMove("x");
+    if (Board.checkValidMove(cellNumber)) {
+      board[cellNumber] = "x";
+      e.path[0].innerHTML = '<img src="assets/img/x.svg" />';
+      Game.updateLastMove("x");
+    }
   }
 
   return {
@@ -164,6 +171,7 @@ const Board = (() => {
     updateBoardAndPlayerTurn,
     updateBoardAndPlayerTurnComp,
     getValidMoves,
+    checkValidMove,
     updateBoard,
     board,
   };
@@ -256,12 +264,11 @@ const DisplayController = (() => {
       }
       // prettier block
       else if (Game.getGameState() == "computer") {
-        console.log(player3.getTurn());
         const cellNumber = e.target.dataset.cell;
         Board.updateBoardAndPlayerTurnComp(cellNumber, e);
         Board.checkCat();
         Board.checkWin();
-        if (Game.getGameState() != "no opponent") {
+        if (Game.getGameState() != "no opponent" && Game.getLastMove() == "x") {
           const randomMove = AI.getRandomMove();
           Board.updateBoard(randomMove, "o");
           gameCells[randomMove].innerHTML = '<img src="assets/img/o.svg" />';
