@@ -1,6 +1,7 @@
 const Game = (() => {
   let gameState = "no opponent";
   let whoseTurn = null;
+  let lastMove = null;
 
   function reset() {
     gameState = "no opponent";
@@ -11,6 +12,10 @@ const Game = (() => {
     DisplayController.resetTurnIndicator();
     DisplayController.toggleResultsDiv();
     DisplayController.toggleBlurContent();
+  }
+
+  function updateLastMove(move) {
+    lastMove = move;
   }
 
   function updateGameState(opponent) {
@@ -28,6 +33,11 @@ const Game = (() => {
   function resetPlayers() {
     player1.setTurn(true);
     player2.setTurn(false);
+    player3.setTurn(false);
+  }
+
+  function getLastMove() {
+    return lastMove;
   }
 
   function getWhoseTurn() {
@@ -41,8 +51,10 @@ const Game = (() => {
   return {
     getGameState,
     getWhoseTurn,
+    getLastMove,
     updateGameState,
     updateWhoseTurn,
+    updateLastMove,
     reset,
   };
 })();
@@ -52,6 +64,10 @@ const Board = (() => {
 
   function resetBoard() {
     board = ["", "", "", "", "", "", "", "", ""];
+  }
+
+  function updateBoard(index, char) {
+    board[index] = char;
   }
 
   function getValidMoves() {
@@ -87,9 +103,18 @@ const Board = (() => {
   }
 
   function checkWin() {
-    if (checkBoard()) {
+    if (checkBoard() && player3.getTurn()) {
       Game.updateGameState("no opponent");
-      if (Game.getWhoseTurn() == player1) {
+      if (Game.getLastMove() == "x") {
+        DisplayController.displayGameResult("win", player1);
+      } else {
+        DisplayController.displayGameResult("win", player3);
+      }
+    }
+    // prettier ignore
+    else if (checkBoard()) {
+      Game.updateGameState("no opponent");
+      if (Game.getLastMove() == "x") {
         DisplayController.displayGameResult("win", player1);
       } else {
         DisplayController.displayGameResult("win", player2);
@@ -115,20 +140,31 @@ const Board = (() => {
       player1.toggleTurn();
       player2.toggleTurn();
       DisplayController.updateTurnIndicator(player2);
+      Game.updateLastMove("x");
     } else if (player2.getTurn() && board[cellNumber] == "") {
       board[cellNumber] = "o";
       e.path[0].innerHTML = '<img src="assets/img/o.svg" />';
       player1.toggleTurn();
       player2.toggleTurn();
       DisplayController.updateTurnIndicator(player1);
+      Game.updateLastMove("o");
     }
   }
+
+  function updateBoardAndPlayerTurnComp(cellNumber, e) {
+    board[cellNumber] = "x";
+    e.path[0].innerHTML = '<img src="assets/img/x.svg" />';
+    Game.updateLastMove("x");
+  }
+
   return {
     checkWin,
     checkCat,
     resetBoard,
     updateBoardAndPlayerTurn,
+    updateBoardAndPlayerTurnComp,
     getValidMoves,
+    updateBoard,
     board,
   };
 })();
@@ -184,7 +220,9 @@ const DisplayController = (() => {
   }
 
   function updateTurnIndicator(player) {
-    turnText.innerHTML = `${player.getName()}'s Turn`;
+    if (typeof player == "object") {
+      turnText.innerHTML = `${player.getName()}'s Turn`;
+    } else turnText.innerHTML = `${player}'s Turn`;
   }
 
   function displayPlayerDiv(oppenent) {
@@ -198,6 +236,9 @@ const DisplayController = (() => {
       toggleChoicesDiv();
       displayPlayerDiv(oppenent);
       updateTurnIndicator(player1);
+      if (Game.getGameState() == "computer") {
+        player3.toggleTurn();
+      }
     });
   });
 
@@ -212,6 +253,22 @@ const DisplayController = (() => {
         Board.updateBoardAndPlayerTurn(cellNumber, e);
         Board.checkCat();
         Board.checkWin();
+      }
+      // prettier block
+      else if (Game.getGameState() == "computer") {
+        console.log(player3.getTurn());
+        const cellNumber = e.target.dataset.cell;
+        Board.updateBoardAndPlayerTurnComp(cellNumber, e);
+        Board.checkCat();
+        Board.checkWin();
+        if (Game.getGameState() != "no opponent") {
+          const randomMove = AI.getRandomMove();
+          Board.updateBoard(randomMove, "o");
+          gameCells[randomMove].innerHTML = '<img src="assets/img/o.svg" />';
+          Game.updateLastMove("o");
+          Board.checkCat();
+          Board.checkWin();
+        }
       }
     });
   });
@@ -232,8 +289,12 @@ const DisplayController = (() => {
 
 const AI = (() => {
   function getRandomMove() {
-    validMoves = Game.getValidMoves();
+    validMoves = Board.getValidMoves();
+    const randomMove = Math.floor(Math.random() * validMoves.length);
+    return validMoves[randomMove];
   }
+
+  return { getRandomMove };
 })();
 
 const playerFactory = (name, value, type) => {
@@ -268,5 +329,6 @@ const playerFactory = (name, value, type) => {
   return { toggleTurn, getName, getTurn, getType, setTurn };
 };
 
-let player1 = playerFactory("Player 1", true, "X's");
-let player2 = playerFactory("Player 2", false, "O's");
+let player1 = playerFactory("Player 1", true, "X");
+let player2 = playerFactory("Player 2", false, "O");
+let player3 = playerFactory("Computer", false, "O");
