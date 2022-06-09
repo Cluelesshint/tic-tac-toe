@@ -5,12 +5,12 @@ const Game = (() => {
   function reset() {
     gameState = "no opponent";
     whoseTurn = null;
-    player1.setTurn(true);
-    player2.setTurn(false);
-    Board.clearBoard();
-    DisplayController.resetModuleAndCont();
-    DisplayController.buildChoicesDiv();
-    DisplayController.clearGridSquares();
+    resetPlayers();
+    Board.resetBoard();
+    DisplayController.resetGridSquares();
+    DisplayController.resetTurnIndicator();
+    DisplayController.toggleResultsDiv();
+    DisplayController.toggleBlurContent();
   }
 
   function updateGameState(opponent) {
@@ -23,6 +23,11 @@ const Game = (() => {
     } else if (player2.getTurn()) {
       whoseTurn = player2;
     }
+  }
+
+  function resetPlayers() {
+    player1.setTurn(true);
+    player2.setTurn(false);
   }
 
   function getWhoseTurn() {
@@ -45,7 +50,7 @@ const Game = (() => {
 const Board = (() => {
   let board = ["", "", "", "", "", "", "", "", ""];
 
-  function clearBoard() {
+  function resetBoard() {
     board = ["", "", "", "", "", "", "", "", ""];
   }
 
@@ -55,7 +60,8 @@ const Board = (() => {
       return false;
     }
     Game.updateGameState("no opponent");
-    DisplayController.displayResult("cat");
+    DisplayController.blurContent();
+    DisplayController.displayGameResult("cat");
     // return true if no blank 'cells' exists
     return true;
   }
@@ -77,9 +83,9 @@ const Board = (() => {
     if (checkBoard()) {
       Game.updateGameState("no opponent");
       if (Game.getWhoseTurn() == player1) {
-        DisplayController.displayResult("win", player1);
+        DisplayController.displayGameResult("win", player1);
       } else {
-        DisplayController.displayResult("win", player2);
+        DisplayController.displayGameResult("win", player2);
       }
     }
   }
@@ -101,53 +107,49 @@ const Board = (() => {
       e.path[0].innerHTML = '<img src="assets/img/x.svg" />';
       player1.toggleTurn();
       player2.toggleTurn();
-      DisplayController.updateWhoseTurnItIs(player2);
+      DisplayController.updateTurnIndicator(player2);
     } else if (player2.getTurn() && board[cellNumber] == "") {
       board[cellNumber] = "o";
       e.path[0].innerHTML = '<img src="assets/img/o.svg" />';
       player1.toggleTurn();
       player2.toggleTurn();
-      DisplayController.updateWhoseTurnItIs(player1);
+      DisplayController.updateTurnIndicator(player1);
     }
   }
-  return { checkWin, checkCat, clearBoard, updateBoardAndPlayerTurn, board };
+  return { checkWin, checkCat, resetBoard, updateBoardAndPlayerTurn, board };
 })();
 
 const DisplayController = (() => {
   const mainCont = document.querySelector(".main-content");
-  const content = document.querySelector(".content");
-  let choices = document.querySelectorAll("button");
+  const choices = document.querySelectorAll("button");
   const gameCells = document.querySelectorAll(".cell");
-  const resultModule = document.querySelector(".display-result");
-  const resultText = document.querySelector(".result");
   const reset = document.querySelector(".reset");
+  const choicesWrapper = document.querySelector(".wrapper");
+  const results = document.querySelector(".display-result");
+  const resultsText = document.querySelector(".result");
+  const turnText = document.querySelector(".turn-text");
 
-  function removeChoicesDiv() {
-    content.removeChild(content.childNodes[3]);
+  function toggleChoicesDiv() {
+    if (choicesWrapper.classList.contains("hide"))
+      choicesWrapper.classList.remove("hide");
+    else choicesWrapper.classList.add("hide");
   }
 
-  function removeTurnIndicatorDiv() {
-    content.removeChild(content.childNodes[3]);
+  function toggleBlurContent() {
+    if (mainCont.classList.contains("blur")) mainCont.classList.remove("blur");
+    else mainCont.classList.add("blur");
   }
 
-  function resetModuleAndCont() {
-    resultModule.classList.remove("active");
-    mainCont.classList.remove("blur");
+  function toggleResultsDiv() {
+    if (results.classList.contains("hide")) results.classList.remove("hide");
+    else results.classList.add("hide");
   }
 
-  function displayResult(winOrCat, player) {
-    resultModule.classList.add("active");
-    mainCont.classList.add("blur");
-    if (winOrCat == "win") {
-      resultText.innerHTML = `${player.getName()} wins!`;
-    }
-    // ignore prettier
-    else if (winOrCat == "cat") {
-      resultText.innerHTML = `Cat!`;
-    }
+  function resetTurnIndicator() {
+    turnText.innerHTML = "";
   }
 
-  function clearGridSquares() {
+  function resetGridSquares() {
     gameCells.forEach((cell) => {
       if (cell.childNodes[0]) {
         cell.removeChild(cell.childNodes[0]);
@@ -155,56 +157,33 @@ const DisplayController = (() => {
     });
   }
 
-  function buildChoicesDiv() {
-    removeTurnIndicatorDiv();
-    const choice = document.createElement("div");
-    choice.classList.add("choice");
-    const choose = document.createElement("h3");
-    choose.innerHTML = "Choose Your Opponent";
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("choice-wrapper");
-    const human = document.createElement("button");
-    human.classList.add("human");
-    human.innerHTML = "Human";
-    const computer = document.createElement("button");
-    computer.innerHTML = "Computer";
-    computer.classList.add("computer");
-    wrapper.appendChild(human);
-    wrapper.appendChild(computer);
-    choice.appendChild(choose);
-    choice.appendChild(wrapper);
-    content.appendChild(choice);
+  function displayGameResult(winOrCat, player) {
+    toggleResultsDiv();
+    toggleBlurContent();
+    if (winOrCat == "win") {
+      resultsText.innerHTML = `${player.getName()} wins!`;
+    }
+    // prettier ignore
+    else if (winOrCat == "cat") {
+      resultsText.innerHTML = `It's a draw! CAT`;
+    }
   }
 
-  function buildTurnIndicatorDiv() {
-    let player = Game.getWhoseTurn();
-    const turnIndicator = document.createElement("div");
-    turnIndicator.classList.add("turn-indicator");
-    const playerTurnText = document.createElement("h3");
-    playerTurnText.classList.add("turn-text");
-    playerTurnText.innerHTML = `${player.getName()}'s Turn ${player.getType()}`;
-    turnIndicator.appendChild(playerTurnText);
-    content.appendChild(turnIndicator);
-  }
-
-  function updateWhoseTurnItIs(player) {
-    const turnText = document.querySelector(".turn-text");
+  function updateTurnIndicator(player) {
     turnText.innerHTML = `${player.getName()}'s Turn ${player.getType()}`;
   }
 
   function displayPlayerDiv(oppenent) {
-    if (oppenent == "human") {
-      Game.updateWhoseTurn(player1);
-      buildTurnIndicatorDiv();
-    }
+    if (oppenent == "human") Game.updateWhoseTurn(player1);
   }
 
   choices.forEach((choice) => {
     choice.addEventListener("click", (e) => {
       let oppenent = e.path[0].className;
       Game.updateGameState(oppenent);
+      toggleChoicesDiv();
       displayPlayerDiv(oppenent);
-      removeChoicesDiv();
+      updateTurnIndicator(player1);
     });
   });
 
@@ -228,11 +207,12 @@ const DisplayController = (() => {
   });
 
   return {
-    updateWhoseTurnItIs,
-    displayResult,
-    resetModuleAndCont,
-    buildChoicesDiv,
-    clearGridSquares,
+    updateTurnIndicator,
+    resetTurnIndicator,
+    displayGameResult,
+    resetGridSquares,
+    toggleBlurContent,
+    toggleResultsDiv,
   };
 })();
 
