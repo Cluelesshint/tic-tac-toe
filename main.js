@@ -203,6 +203,14 @@ const DisplayController = (() => {
     else results.classList.add("hide");
   }
 
+  function blurContent() {
+    mainCont.classList.add("blur");
+  }
+
+  function showResultsDiv() {
+    results.classList.remove("hide");
+  }
+
   function resetTurnIndicator() {
     turnText.innerHTML = "";
   }
@@ -216,8 +224,8 @@ const DisplayController = (() => {
   }
 
   function displayGameResult(winOrCat, player) {
-    toggleResultsDiv();
-    toggleBlurContent();
+    blurContent();
+    showResultsDiv();
     if (winOrCat == "win") {
       resultsText.innerHTML = `${player.getName()} wins!`;
     }
